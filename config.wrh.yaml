@@ -1,0 +1,31 @@
+mysql:
+  host: "127.0.0.1"
+  port: 3308
+  user: "root"
+  password: "a123"
+  database: "rhim"
+  charset: "utf8mb4"
+  collation: "utf8mb4_general_ci"
+  max_idle_connection: 30
+  max_connection: 30
+
+redis:
+  host: 127.0.0.1
+  port: 6379
+  password:
+
+system:
+  server_name: "rh_im"
+  port: 8080
+  host: 127.0.0.1
+
+server:
+  servicename: 我是服务
+  debug: true
+  environment: local
+  authon: true
+  version:
+  webhookurL:
+
+web:
+  port: 50001
