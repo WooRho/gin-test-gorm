@@ -1,7 +1,6 @@
 package base_mysql
 
 import (
-	"context"
 	"gorm.io/gorm"
 )
 
@@ -12,6 +11,4 @@ type BaseField struct {
 	DeletedId uint64 `gorm:"column:deleted_id;type:bigint(20) unsigned;not null;default:0;comment:删除人id"` // 删除人id
 }
 
-func (b *BaseField) Create(ctx context.Context) error {
-	
-}
+// 多条插入比单条插入性能好；
