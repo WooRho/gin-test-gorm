@@ -2,12 +2,14 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"gin-test-gorm/model"
 	"gin-test-gorm/structure"
 	"gin-test-gorm/tools"
 	"gin-test-gorm/tools/metadata"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"sync"
 )
 
 func Login(c *gin.Context) {
@@ -38,6 +40,11 @@ func Login(c *gin.Context) {
 	metadata.UserInfo.Store("token-123456", user.ID)
 }
 
+func Print(c *gin.Context) {
+	fmt.Println("ddddd")
+	tools.BuildResponse(c, nil, "我是帅哥")
+}
+
 func Create(c *gin.Context) {
 	var (
 		err  error
@@ -64,19 +71,47 @@ func Create(c *gin.Context) {
 	defer func() {
 		tools.BuildResponse(c, err, data)
 	}()
-	{
-		user.Name = p.Name
-		user.Password = p.Password
-		user.Phone = p.Phone
-	}
-	value, _ := metadata.UserInfo.Load("token-123456")
-	id := value.(uint)
-	context.WithValue(ctx, "user_id", id)
-	context.WithValue(ctx, "creator_id", id)
-	context.WithValue(ctx, "updater_id", id)
-	context.WithValue(ctx, "deleted_id", id)
+
+	wg := sync.WaitGroup{}
+	wg.Add(5)
+	go func() {
+		err = db.Debug().WithContext(ctx).First(&user, 1).Error
+		if err != nil {
+			fmt.Println(err)
+		}
+		wg.Done()
+	}()
+	go func() {
+		err = db.Debug().WithContext(ctx).First(&user, 1).Error
+		if err != nil {
+			fmt.Println(err)
+		}
+		wg.Done()
+	}()
+	go func() {
+		err = db.Debug().WithContext(ctx).First(&user, 9).Error
+		if err != nil {
+			fmt.Println(err)
+		}
+		wg.Done()
+	}()
+	go func() {
+		err = db.Debug().WithContext(ctx).First(&user, 9).Error
+		if err != nil {
+			fmt.Println(err)
+		}
+		wg.Done()
+	}()
+	go func() {
+		err = db.Debug().WithContext(ctx).First(&user, 9).Error
+		if err != nil {
+			fmt.Println(err)
+		}
+		wg.Done()
+	}()
+	wg.Wait()
 	//err = db.Debug().WithContext(ctx).Create(&user).Error
-	model.CreateModel(ctx, db, &user)
+	//model.CreateModel(ctx, db, user)
 }
 
 func AuthAdmin(c *gin.Context) {

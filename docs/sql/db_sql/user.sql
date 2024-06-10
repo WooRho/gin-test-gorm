@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `user`
 (
-    `name`        VARCHAR(255)        DEFAULT '' NOT NULL COMMENT '成品编号',
+    `name`        VARCHAR(64)        DEFAULT '' NOT NULL COMMENT '成品编号',
     `password`    VARCHAR(64)         DEFAULT '' NOT NULL COMMENT '密码',
     `phone`       VARCHAR(64)         DEFAULT '' NOT NULL COMMENT '手机号码',
     `id`          bigint(20) unsigned            NOT NULL AUTO_INCREMENT,

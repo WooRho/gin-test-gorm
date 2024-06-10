@@ -7,8 +7,10 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
+	"io/ioutil"
 	"log"
 	"os"
+	"strings"
 	"sync"
 	"time"
 )
@@ -44,7 +46,7 @@ func NewDatabase(config *config.Mysql) *gorm.DB {
 		log.New(os.Stdout, "\r\n", log.LstdFlags),
 		logger.Config{
 			//设定慢查询时间阈值为3s
-			SlowThreshold: 3 * time.Second,
+			SlowThreshold: 1 * time.Second,
 			//设置日志级别，只有Warn和Info级别会输出慢查询日志
 			LogLevel:                  logger.Info,
 			IgnoreRecordNotFoundError: false,
@@ -90,4 +92,66 @@ func SetDB(config *config.Mysql, db *gorm.DB) {
 	} else {
 		log.Println(`"` + config.DbName + `"数据库,连接成功`)
 	}
+}
+
+const (
+	SqlPathLocal = "docs/sql"
+	SqlPathTest  = "sql/"
+)
+
+var sqlStr = ""
+
+func SqlInit() {
+	var (
+		tplFileList []string
+		err         error
+	)
+	tplFileList, err = GetAllTplFile(SqlPathLocal, nil)
+	if err != nil {
+		return
+	}
+
+	fileCount := len(tplFileList)
+	if fileCount == 0 {
+		return
+	}
+	for _, path := range tplFileList {
+		c, ioErr := ioutil.ReadFile(path)
+		if ioErr != nil {
+			return
+		}
+		sqlStr = string(c)
+		if sqlStr == "" {
+			return
+		}
+		splitSQLs := strings.Split(sqlStr, ";")
+		for _, splitSQL := range splitSQLs {
+			if splitSQL == "" || strings.Trim(splitSQL, "\r\n") == "" {
+				continue
+			}
+			err := GetDb().Exec(strings.Trim(splitSQL, "\n")).Error
+			if err != nil {
+				continue
+			}
+		}
+	}
+	return
+}
+
+// 获取 pathName 文件夹下所有 sql 文件
+func GetAllTplFile(pathName string, fileList []string) ([]string, error) {
+	files, err := os.ReadDir(pathName)
+	for _, fi := range files {
+		if fi.IsDir() {
+			fileList, err = GetAllTplFile(pathName+"/"+fi.Name(), fileList)
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			if strings.HasSuffix(fi.Name(), ".sql") {
+				fileList = append(fileList, pathName+"/"+fi.Name())
+			}
+		}
+	}
+	return fileList, err
 }

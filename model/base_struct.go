@@ -13,8 +13,18 @@ type BaseField struct {
 }
 
 // 多条插入比单条插入性能好；
-func (model *BaseField) GetUserId() {
+func (model *BaseField) BeforeCreate() {
 	value, _ := metadata.UserInfo.Load("token-123456")
 	model.CreatorId = value.(uint)
 	model.UpdaterId = value.(uint)
+}
+
+func (model *BaseField) BeforeUpdate() {
+	value, _ := metadata.UserInfo.Load("token-123456")
+	model.UpdaterId = value.(uint)
+}
+
+func (model *BaseField) BeforeDel() {
+	value, _ := metadata.UserInfo.Load("token-123456")
+	model.DeletedId = value.(uint)
 }

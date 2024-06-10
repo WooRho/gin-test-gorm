@@ -21,14 +21,9 @@ func ShouldBind(c *gin.Context, p structure.IParam) (err error) {
 			err = err
 		}
 	}
-
-	//p.AdjustParam()
-
-	//err = p.ValidateParam()
 	if err != nil {
 		return
 	}
-
 	return
 }
 
@@ -112,7 +107,7 @@ func BuildListResponse(c *gin.Context, err error, list structure.IResponseData, 
 		response.Msg = "success"
 		// 判断list值是否为空
 		if !reflect.ValueOf(list).IsNil() {
-			list.AdjustData()
+			//list.AdjustData()
 			response.Data.List = list
 			response.Data.Total = total
 		}

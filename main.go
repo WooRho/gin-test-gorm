@@ -32,12 +32,13 @@ func main() {
 }
 
 func initServer(r *gin.Engine) {
+	model.SqlInit()
 	// 初始化数据库
-	model.Migrate(model.GetDb())
+	//model.Migrate(model.GetDb())
 
 	baseGroup := r.Group("")
 
-	adminAuth := baseGroup.Group("", server.AuthAdmin)
+	//adminAuth := baseGroup.Group("", server.AuthAdmin)
 	//// 登录登出
 	//{
 	baseGroup.POST("login", server.Login)
@@ -54,5 +55,7 @@ func initServer(r *gin.Engine) {
 	//	adminAuth.GET("获取登录日志", "loginLog", system.GetLoginLogList)
 	//	adminAuth.GET("获取登录地", "loginSite", system.GetLoginSite)
 	//}
-	adminAuth.POST("create", server.Create)
+	//adminAuth.POST("create", server.Create)
+	baseGroup.POST("create", server.Create)
+	baseGroup.POST("print", server.Print)
 }
