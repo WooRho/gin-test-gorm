@@ -1,9 +1,9 @@
 mysql:
-  host: "127.0.0.1"
-  port: 3308
-  user: "root"
-  password: "a123"
-  database: "rhim"
+  host: "8.136.99.44"
+  port: "3306"
+  username: "root"
+  password: "a1234"
+  dbname: "test"
   charset: "utf8mb4"
   collation: "utf8mb4_general_ci"
   max_idle_connection: 30
@@ -15,6 +15,17 @@ redis:
   password:
 
 system:
-  server_name: "rh_im"
-  port: 8080
+  server_name: "test"
+  port: 50002
   host: 127.0.0.1
+
+server:
+  servicename: 我是服务
+  debug: true
+  environment: local
+  authon: true
+  version:
+  webhookurL:
+
+web:
+  port: 50001

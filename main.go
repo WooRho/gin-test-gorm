@@ -32,8 +32,9 @@ func main() {
 }
 
 func initServer(r *gin.Engine) {
+	model.SqlInit()
 	// 初始化数据库
-	model.Migrate(model.GetDb())
+	//model.Migrate(model.GetDb())
 
 	baseGroup := r.Group("")
 

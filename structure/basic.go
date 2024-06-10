@@ -31,20 +31,20 @@ type (
 )
 
 type IParam interface {
-	AdjustParam()
-	ValidateParam() error
+	//AdjustParam()
+	//ValidateParam() error
 }
 
 type Param struct {
 }
 
-func (Param) ValidateParam() error {
-	return nil
-}
-
-func (s Param) AdjustParam() {
-
-}
+//func (Param) ValidateParam() error {
+//	return nil
+//}
+//
+//func (s Param) AdjustParam() {
+//
+//}
 
 type IResponseData interface {
 	AdjustData()

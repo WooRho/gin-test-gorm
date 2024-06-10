@@ -1,8 +1,8 @@
 mysql:
-  host: "127.0.0.1"
+  host: "8.136.99.44"
   port: "3306"
   username: "root"
-  password: "a123"
+  password: "a1234"
   dbname: "test"
   charset: "utf8mb4"
   collation: "utf8mb4_general_ci"
