@@ -1,4 +1,4 @@
-package base_mysql
+package model
 
 import (
 	"fmt"

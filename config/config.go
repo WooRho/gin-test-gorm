@@ -50,7 +50,7 @@ type Redis struct {
 
 type Mysql struct {
 	Host         string `mapstructure:"host" json:"host" yaml:"host"`                         // 地址
-	Port         int    `mapstructure:"port" json:"port" yaml:"port"`                         // 端口
+	Port         string `mapstructure:"port" json:"port" yaml:"port"`                         // 端口
 	UserName     string `mapstructure:"username" json:"username" yaml:"username"`             // 用户
 	PassWord     string `mapstructure:"password" json:"password" yaml:"password"`             // 密码
 	DbName       string `mapstructure:"dbname" json:"dbname" yaml:"dbname"`                   // 数据库名
