@@ -6,6 +6,12 @@ type User struct {
 	Phone    string `gorm:"column:phone;"`
 	Name     string `gorm:"column:name;"`
 }
+type User2 struct {
+	BaseField
+	Password string `gorm:"column:password33;"`
+	Phone    string `gorm:"column:phone;"`
+	Name     string `gorm:"column:name;"`
+}
 
 type UserParams struct {
 	Name     string `json:"name"`
@@ -15,4 +21,8 @@ type UserParams struct {
 
 func (u *User) TableName() string {
 	return "user"
+}
+
+func (u *User2) TableName() string {
+	return "user2"
 }

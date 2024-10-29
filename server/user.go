@@ -8,8 +8,8 @@ import (
 	"gin-test-gorm/tools"
 	"gin-test-gorm/tools/metadata"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"net/http"
-	"sync"
 )
 
 func Login(c *gin.Context) {
@@ -47,71 +47,38 @@ func Print(c *gin.Context) {
 
 func Create(c *gin.Context) {
 	var (
-		err  error
-		db   = model.GetDb()
-		ctx  = context.TODO()
-		p    = &model.UserParams{}
-		user = model.User{}
-		data = structure.Id{}
+		err   error
+		db1   = model.GetDb()
+		db2   = model.GetDb()
+		ctx   = context.TODO()
+		p     = &model.UserParams{}
+		user  = model.User{}
+		user2 = model.User2{}
+		data  = structure.Id{}
 	)
 	err = tools.ShouldBind(c, p)
 	if err != nil {
 		return
 	}
 
-	db = db.Begin()
-
-	defer func() {
-		if err != nil {
-			db.Rollback()
-		}
-		db.Commit()
-	}()
-
 	defer func() {
 		tools.BuildResponse(c, err, data)
 	}()
+	err = model.GetDb().Transaction(func(tx *gorm.DB) error {
+		err = db1.Debug().WithContext(ctx).Create(&user).Error
+		if err != nil {
+			fmt.Println(err)
+		}
+		// 假装报错
 
-	wg := sync.WaitGroup{}
-	wg.Add(5)
-	go func() {
-		err = db.Debug().WithContext(ctx).First(&user, 1).Error
+		err = db2.Debug().WithContext(ctx).Create(&user2).Error
 		if err != nil {
-			fmt.Println(err)
+			return err
+			//fmt.Println(err)
 		}
-		wg.Done()
-	}()
-	go func() {
-		err = db.Debug().WithContext(ctx).First(&user, 1).Error
-		if err != nil {
-			fmt.Println(err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		err = db.Debug().WithContext(ctx).First(&user, 9).Error
-		if err != nil {
-			fmt.Println(err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		err = db.Debug().WithContext(ctx).First(&user, 9).Error
-		if err != nil {
-			fmt.Println(err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		err = db.Debug().WithContext(ctx).First(&user, 9).Error
-		if err != nil {
-			fmt.Println(err)
-		}
-		wg.Done()
-	}()
-	wg.Wait()
-	//err = db.Debug().WithContext(ctx).Create(&user).Error
-	//model.CreateModel(ctx, db, user)
+		return nil
+	})
+
 }
 
 func AuthAdmin(c *gin.Context) {
